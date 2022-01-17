@@ -16,19 +16,19 @@ public class UserInfoEntity {
     //@GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    @Column(name="userName")
+    @Column(name = "userName")
     private String userName;
-    @Column(name="firstName")
+    @Column(name = "firstName")
     private String firstName;
-    @Column(name="lastName")
+    @Column(name = "lastName")
     private String lastName;
-    @Column(name="mobileNumber")
+    @Column(name = "mobileNumber")
     private String mobileNumber;
-    @Column(name="emailID")
+    @Column(name = "emailID")
     private String emailID;
-    @Column(name="address1")
+    @Column(name = "address1")
     private String address1;
-    @Column(name="address2")
+    @Column(name = "address2")
     private String address2;
 
 
