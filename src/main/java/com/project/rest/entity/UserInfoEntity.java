@@ -3,7 +3,7 @@ package com.project.rest.entity;
 
 import lombok.Getter;
 import lombok.Setter;
-import lombok.ToString;
+
 
 import javax.persistence.*;
 
@@ -13,7 +13,7 @@ import javax.persistence.*;
 @Setter
 public class UserInfoEntity {
     @Id
-    //@GeneratedValue(strategy = GenerationType.IDENTITY)
+
     private int id;
 
     @Column(name = "userName")
