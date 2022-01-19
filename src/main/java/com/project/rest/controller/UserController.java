@@ -4,6 +4,8 @@ package com.project.rest.controller;
 import com.project.rest.entity.UserInfoEntity;
 import com.project.rest.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 
@@ -14,26 +16,26 @@ public class UserController {
     private UserService userservice;
 
     @GetMapping("/user")
-    public UserInfoEntity getUserDetails(@RequestParam int userId) {
+    public ResponseEntity getUserDetails(@RequestParam int userId) {
 
-        return userservice.getuser(userId);
+        return  userservice.getuser(userId);
     }
 
 
     @PostMapping("/user")
-    public String insertUserDetails(@RequestBody UserInfoEntity user) {
+    public ResponseEntity insertUserDetails(@RequestBody UserInfoEntity user) {
 
-        return userservice.postuser(user);
+        return  userservice.postuser(user);
     }
 
     @PutMapping("/user")
-    public String updateuserdetails(@RequestParam int userId, @RequestBody UserInfoEntity user) {
+    public ResponseEntity updateuserdetails(@RequestParam int userId, @RequestBody UserInfoEntity user) {
 
         return userservice.putuser(userId, user);
     }
 
     @DeleteMapping("/user")
-    public String deleteuserdetails(@RequestParam int userId) {
+    public ResponseEntity deleteuserdetails(@RequestParam int userId) {
 
         return userservice.deletedetails(userId);
 

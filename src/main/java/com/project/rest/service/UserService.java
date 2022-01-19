@@ -5,6 +5,8 @@ import com.project.rest.entity.UserInfoEntity;
 import com.project.rest.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -14,33 +16,45 @@ public class UserService {
     private UserRepository userRepository;
 
 
-    public UserInfoEntity getuser(int userId) {
+    public ResponseEntity getuser(int userId) {
+           try {
+               UserInfoEntity getuserdetails = userRepository.findById(userId);
+               if(getuserdetails==null)
+                   return new ResponseEntity("No such user exists",HttpStatus.NOT_FOUND);
 
-        UserInfoEntity getuserdetails = userRepository.findById(userId);
-        return getuserdetails;
+                   else
+               return new ResponseEntity(getuserdetails,HttpStatus.OK);
+           }
+
+
+
+           catch (Exception e) {
+               return new ResponseEntity(e.getMessage(),HttpStatus.INTERNAL_SERVER_ERROR);
+           }
+
     }
 
-    public String postuser(UserInfoEntity user) {
+    public ResponseEntity postuser(UserInfoEntity user) {
         try {
             userRepository.save(user);
-            return "Successfully added your information to database";
+            return new ResponseEntity("Successfully added user to the database", HttpStatus.CREATED);
         } catch (DataIntegrityViolationException e) {
 
-            return "User already exists";
+            return new ResponseEntity("user already exists", HttpStatus.CONFLICT);
         } catch (Exception e) {
-            return e.getMessage();
+            return new ResponseEntity(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
     }
 
 
-    public String putuser(int userId, UserInfoEntity user) {
-
+    public ResponseEntity putuser(int userId, UserInfoEntity user) {
+        try {
         UserInfoEntity updateuser = userRepository.findById(userId);
 
 
         if (updateuser == null)
-            return "No such user exists";
+            return new ResponseEntity("user does not exist", HttpStatus.NOT_FOUND);
 
         updateuser.setUserName(user.getUserName());
         updateuser.setFirstName(user.getFirstName());
@@ -50,28 +64,39 @@ public class UserService {
         updateuser.setAddress1(user.getAddress1());
         updateuser.setAddress2(user.getAddress2());
 
-        try {
+
             userRepository.save(updateuser);
-            return "Successfully updated your information to database";
+            return new ResponseEntity("Successfully added the information to your database",HttpStatus.OK);
+
+
+
         } catch (DataIntegrityViolationException e) {
 
-            return "Cannot update the information ,User with this information already exists";
+            return new ResponseEntity("User with this information already exists",HttpStatus.CONFLICT);
         }
-
+        catch (Exception e) {
+            return new ResponseEntity(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
 
     }
 
-    public String deletedetails(int userId) {
+    public ResponseEntity deletedetails(int userId) {
 
-        UserInfoEntity deleteuser = userRepository.findById(userId);
+        try {
 
-        if (deleteuser == null)
-            return "No such user exists";
 
-        userRepository.delete(deleteuser);
+            UserInfoEntity deleteuser = userRepository.findById(userId);
 
-        return "Successfully deleted the information from database";
+            if (deleteuser == null)
+                return new ResponseEntity("user does not exist", HttpStatus.NOT_FOUND);
 
+            userRepository.delete(deleteuser);
+
+            return new ResponseEntity("succesfully deleted information from the database", HttpStatus.OK);
+        }
+        catch (Exception e) {
+            return new ResponseEntity(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
 
     }
 }
