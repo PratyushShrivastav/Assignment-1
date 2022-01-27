@@ -2,11 +2,18 @@ package com.project.rest.controller;
 
 
 import com.project.rest.entity.UserInfoEntity;
+import com.project.rest.exception.ResourceAlreadyExistsException;
+import com.project.rest.exception.ResourceNotFoundException;
 import com.project.rest.service.UserService;
+import com.sun.istack.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
+
+//import javax.validation.Valid;
 
 
 @RestController
@@ -16,28 +23,82 @@ public class UserController {
     private UserService userservice;
 
     @GetMapping("/user")
-    public ResponseEntity getUserDetails(@RequestParam int userId) {
+    public ResponseEntity getUserDetails(@RequestParam int userId) throws Exception {
 
-        return  userservice.getuser(userId);
+
+        try {
+            return userservice.getUser(userId);
+        }
+        catch(ResourceNotFoundException e)
+        {
+             throw new ResourceNotFoundException(e.getMessage());
+        }
+        catch (Exception e) {
+            throw new Exception(e.getMessage());
+        }
+
+
+
     }
+
 
 
     @PostMapping("/user")
-    public ResponseEntity insertUserDetails(@RequestBody UserInfoEntity user) {
+    public ResponseEntity insertUserDetails( @RequestBody UserInfoEntity user) throws Exception {
 
-        return  userservice.postuser(user);
+        try {
+            return userservice.postUser(user);
+        }
+        catch(ResourceAlreadyExistsException e) {
+
+            throw new ResourceAlreadyExistsException(e.getMessage());
+
+        }
+        catch(Exception e)
+        {
+            throw new Exception(e.getMessage());
+        }
+
+
     }
 
     @PutMapping("/user")
-    public ResponseEntity updateuserdetails(@RequestParam int userId, @RequestBody UserInfoEntity user) {
+    public ResponseEntity updateuserdetails(@RequestParam int userId, @RequestBody UserInfoEntity user) throws Exception {
 
-        return userservice.putuser(userId, user);
+        try {
+            return userservice.putUser(userId, user);
+        }
+        catch(ResourceNotFoundException e)
+        {
+            throw new ResourceNotFoundException(e.getMessage());
+        }
+        catch(ResourceAlreadyExistsException e) {
+
+            throw new ResourceAlreadyExistsException(e.getMessage());
+
+        }
+
+        catch (Exception e) {
+            throw new Exception(e.getMessage());
+        }
+
+
     }
 
     @DeleteMapping("/user")
-    public ResponseEntity deleteuserdetails(@RequestParam int userId) {
+    public ResponseEntity deleteuserdetails(@RequestParam int userId) throws Exception {
 
-        return userservice.deletedetails(userId);
+        try {
+            return userservice.deleteDetails(userId);
+        }
+        catch(ResourceNotFoundException e)
+        {
+            throw new ResourceNotFoundException(e.getMessage());
+        }
+        catch(Exception e)
+        {
+            throw new Exception(e.getMessage());
+        }
 
     }
 

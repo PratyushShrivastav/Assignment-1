@@ -1,8 +1,10 @@
 package com.project.rest;
 
 import com.project.rest.entity.UserInfoEntity;
+import com.project.rest.repository.UserRepository;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.http.HttpEntity;
@@ -17,34 +19,102 @@ import java.net.URISyntaxException;
 public class RestApplicationTests {
 
 
-
-	@LocalServerPort
-	int randomServerPort;
+    @Autowired
+	UserRepository userRepository;
 
 	@Test
-	public void testAdduserSuccess() throws URISyntaxException
+	public void testAddUser()
 	{
-		RestTemplate restTemplate = new RestTemplate();
-		final String baseUrl = "http://localhost:"+randomServerPort+"/user";
-		URI uri = new URI(baseUrl);
-		UserInfoEntity user = new UserInfoEntity();
 
-		user.setUserName("ramkumar");
-		user.setFirstName("ram");
-		user.setLastName("kumar");
-		user.setMobileNumber("5446465");
-		user.setEmailID("ra@gmail.com");
-		user.setAddress1("dubai");
-		user.setAddress2("saudi");
+		UserInfoEntity addUser= new UserInfoEntity();
 
+		addUser.setUserName("shyamkumar");
+		addUser.setFirstName("shyam");
+		addUser.setLastName("kumar");
+		addUser.setMobileNumber("8085021987");
+		addUser.setEmailID("shyam123@gmail.com");
+		addUser.setAddress1("India");
+		addUser.setAddress2("bangladesh");
 
+		userRepository.save(addUser);
 
-		HttpEntity<UserInfoEntity> request = new HttpEntity<>(user);
-
-		ResponseEntity<String> result = restTemplate.postForEntity(uri, request, String.class);
+        Assertions.assertNotNull(addUser);
 
 		//Verify request succeed
-		Assertions.assertEquals(200, result.getStatusCodeValue());
+		//Assertions.assertEquals("user already exists", result.getBody());
+		//System.out.println(result.getStatusCode());
 	}
+
+    @Test
+	public void testFindUserExist()
+	{
+		int id=61;
+
+		UserInfoEntity findUser = userRepository.findById(id);
+
+		Assertions.assertEquals(findUser.getId(),id);
+	}
+	@Test
+	public void testFindUserNotExist()
+	{
+          int id=99;
+		UserInfoEntity findUser = userRepository.findById(id);
+
+		Assertions.assertNull(findUser);
+
+	}
+	@Test
+	public void testUpdateUser()
+	{
+		int id=61;
+
+		UserInfoEntity updateUser= userRepository.findById(id);
+
+		String name= "shyamkumari";
+
+		updateUser.setUserName(name);
+		updateUser.setFirstName("shyam");
+		updateUser.setLastName("kumar");
+		updateUser.setMobileNumber("85021987");
+		updateUser.setEmailID("shyamkumari123@gmail.com");
+		updateUser.setAddress1("India");
+		updateUser.setAddress2("bangladesh");
+
+        userRepository.save(updateUser);
+
+		UserInfoEntity updatedUser= userRepository.findById(id);
+
+
+		Assertions.assertEquals(name,updatedUser.getUserName());
+
+
+
+	}
+
+
+
+	@Test
+	public void testDeleteUser()
+	{
+
+		   String name= "pig456hbj@gmail.com";
+           UserInfoEntity deleteUser= userRepository.findByemailID(name);
+
+		   userRepository.delete(deleteUser);
+
+		   UserInfoEntity deleteduser=userRepository.findByemailID(name);
+
+           Assertions.assertNull(deleteduser);
+
+
+	}
+
+
+
+
+
+
+
+
 
 }

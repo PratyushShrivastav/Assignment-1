@@ -9,6 +9,10 @@ public interface UserRepository extends JpaRepository<UserInfoEntity, Integer> {
 
 
     UserInfoEntity findById(int id);
+    public UserInfoEntity findByuserName(String username);
+    public UserInfoEntity findBymobileNumber(String mobilenumber);
+    public UserInfoEntity findByemailID(String emailid);
+
 
 
 }
