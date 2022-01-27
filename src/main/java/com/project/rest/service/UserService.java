@@ -24,7 +24,7 @@ public class UserService {
 
 
         if (getuserdetails == null)
-            throw new ResourceNotFoundException("No user present with id " + userId);
+            throw new ResourceNotFoundException("No user present with the id " + userId);
 
 
         return new ResponseEntity(getuserdetails, HttpStatus.OK);
