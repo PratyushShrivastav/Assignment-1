@@ -11,6 +11,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import javax.validation.Valid;
+
 @Service
 public class UserService {
 
@@ -29,9 +31,10 @@ public class UserService {
 
         return new ResponseEntity(getuserdetails, HttpStatus.OK);
 
+
     }
 
-    public ResponseEntity postUser(UserInfoEntity user) {
+    public ResponseEntity postUser( UserInfoEntity user) {
 
         if (userRepository.findByuserName(user.getUserName()) != null || userRepository.findBymobileNumber(user.getMobileNumber()) != null || userRepository.findByemailID(user.getEmailID()) != null)
             throw new ResourceAlreadyExistsException("The user already exists");
